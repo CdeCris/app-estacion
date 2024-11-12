@@ -1,0 +1,50 @@
+
+    <div id="sidenav">
+        <div class="enlaces columna" id="enlacesNav">
+            <button><a href="{{APP_URL_BASE}}/panel" class="letra-blanca"><i class="fa-solid fa-house me-0 p12R"></i>Panel</a> </button>
+            <button><a href="{{APP_URL_BASE}}/productList" class="letra-blanca"><i class="p12R fa-solid fa-shop"></i></i>Productos</a> </button>
+            <button><a href="{{APP_URL_BASE}}/perfil" class="letra-blanca"><i class="p12R fa-solid fa-user"></i>Perfil</a> </button>
+            <button><a href="{{APP_URL_BASE}}/chartList" class="letra-blanca"><i class="fa-solid fa-bell letra-blanca p12R"></i>Notificaciones </a> </button>
+            <div class="absolute_abajo columna">
+                <div class="flex-end redes m12t m12b">
+                    <!-- <i class="fa-regular fa-envelope p10 border_redes ml-2"></i>
+                    <i class="fa-brands fa-whatsapp p10 border_redes ml-2"></i> -->
+                    <i class="fa-brands fa-instagram p10 border_redes ml-2"></i>
+                    <i class="fa-brands fa-facebook p10 border_redes ml-2"></i>
+                    <i class="fa-brands fa-tiktok p10 border_redes ml-2"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <header>
+        <div class="logo">
+           <a href="{{APP_URL_BASE}}/landing"><img src="{{APP_URL_LOGO_MAIN}}" alt=""></a>
+        </div>
+        <div class="icono">
+            <input class="buscador" type="search" placeholder="Buscar producto">
+            <input type="submit" class="material-icons-outlined btn_lupa" value="search">
+        </div>
+        <button class="menu" onclick="sideNav()">
+            <i class="letra-blanca fa-solid fa-bars precio"></i>
+        </button>
+        <div class="enlaces" id="enlacesHead">
+            <button><a href="{{APP_URL_BASE}}/panel" class="letra-blanca"><i class="fa-solid fa-house me-0 p12R"></i>Panel</a> </button>
+            <button><a href="{{APP_URL_BASE}}/myProducts" class="letra-blanca"><i class="fa-solid fa-shop p12R"></i>Mis Productos</a> </button>
+            <button  id="popupPerfil"><i class="p12R fa-solid fa-user letra-blanca"></i>
+            Perfil</button>
+            <button><i class="fa-solid fa-bell"></i></button>
+        </div>
+    </header>
+    <div id="popupModalPerfil" class="modal-perfil">
+        <div class="modal-content-perfil">
+            <div class="columna">
+                <p class="letra-celeste font-17">{{NOMBRE_USUARIO}}</p>
+                <a href="{{APP_URL_BASE}}/perfil" class="letra-negra p12L p10T">Mi perfil</a>
+                <a href="" class="letra-negra p12L p10T">Mis ventas</a>
+                <a href="" class="letra-negra p12L p10T">Opiniones</a>
+                <a href="" class="letra-negra p12L p10T">Ver facturas</a>
+                <a href="{{APP_URL_BASE}}/logout" class="letra-negra p20L p10T">Salir</a>
+            </div>
+        </div>
+    </div>

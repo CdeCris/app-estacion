@@ -1,0 +1,27 @@
+@extern('header')
+    
+    @extern('navbar')
+
+    <main class="main-panel-Admin">
+        <span class="font-25 letra-negra">¡Bienvenido al panel del administrador!</span>
+        <template id="template_estacion">
+            <a href="" class="content_estacion">
+                <div class="estacion_title">
+                    <span class="estacion_nombre"></span>
+                    <span class="estacion_visitas">
+                        <span class="material-symbols-outlined">web_traffic</span>
+                        <span class="visitas-count"></span>
+                    </span>
+                </div>
+                <div class="footer_card">
+                    <span class="estacion_ubicacion"></span>
+                </div>
+            </a>
+        </template>
+
+        <div id="listado__estaciones" class="panel_admin"></div>
+    </main>
+    <script src="{{APP_URL_BASE}}/views/static/js/showStations.js"></script>
+
+
+@extern('footer')

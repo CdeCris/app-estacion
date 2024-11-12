@@ -1,0 +1,57 @@
+@extern('header')
+
+<div class="hiden main-login">
+        <div class="logo">
+            <a href="{{APP_URL_BASE}}/landing"><img src="{{APP_URL_LOGO_MAIN}}" alt=""></a>
+        </div>
+
+        <div class="contenedor-login">
+            <div class="login letra-blanca">
+                <form action="" method="POST">
+                    <h4 class="p10">CREAR CUENTA</h4>
+                    <h5 class="sub-title">Ingrese sus datos para continuar.</h5>
+                    <div class="fila">
+                        <h5 class="txt">Email</h5>
+                        <i class="fa-regular fa-envelope left-icon"></i>
+                        <input class="linea_registro" type="text" name="txt_email" placeholder="Hello@reallygreatsite.com">
+
+                    </div>
+                    <div class="fila">
+                        <h5 class="txt">Cree su contraseña</h5>
+                        <i class="fa-regular fa-lock left-icon"></i>
+                        <i class="fa-light fa-eye pa r0" id="togglePassword"> </i>
+                        <input class="linea_registro" type="password" name="txt_pass" placeholder="Ingrese su Contraseña" id="id_password">
+                    </div>
+                    <div class="fila">
+                        <h5 class="txt">Repita su contraseña</h5>
+                        <i class="fa-regular fa-lock left-icon"></i>
+                        <i class="fa-light fa-eye pa r0" id="togglePassword2"> </i>
+                        <input class="linea_registro" type="password" name="txt_pass_2" placeholder="Ingrese su Contraseña" id="id_password2">
+                    </div>
+                    <div>{{MSG_REGISTER_ERROR}}</div>
+                    <input type="submit" value="Crear cuenta" name="btn_register" class="btn_registro">
+                    <span class="font-resgistro">Ya tenes una cuenta?</span><br>
+                    <span class="font-resgistro"><a href="{{APP_URL_BASE}}/login">Iniciar sesión</a></span>
+                </form>
+            </div>
+            <div class="imagen_login"><img src="{{APP_URL_BASE}}/views/static/img/system/Innovplast_Mano.png" alt=""></div>
+        </div>
+    </div>
+    <script src="{{APP_URL_BASE}}/views/static/js/frontend/ojito.js"></script>
+<!-- 
+                                <div class="tooltip">
+                                REQUISITOS: <br>
+                                - 1 Mayúscula<br>
+                                - 1 Minúscula<br>
+                                - 1 Número<br>
+                                - Más de 4 caracteres
+                            </div>
+	 <h1>Registro</h1>
+	<form action="" method="POST">
+		<input type="email" name="txt_email" placeholder="Email" required>
+		<input type="text" name="txt_pass" placeholder="Contraseña" required>
+		<input type="submit" name="btn_register" value="Ingresar">
+		<div>{{MSG_REGISTER_ERROR}}</div>
+	</form>
+	<a href="{{APP_URL_BASE}}/login">Login</a> -->
+	

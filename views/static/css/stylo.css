@@ -1,0 +1,136 @@
+@import url(fonts.css);
+@import url(colores.css);
+@import url(fawesome-all.css);
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+}
+
+:root {
+    --main-color: var(--secondary-500) --main-secondary-color: var(--secondary-100)
+        /* variables que vayamos a utilizar */
+
+
+}
+
+body {
+    min-height: 100dvh;
+    background-color: var(--primary-400);
+    color: var(--primary-900);
+
+}
+
+
+
+img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.flex {
+    display: flex;
+
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5em;
+    flex: 1;
+}
+
+.side{
+    position: fixed;
+    bottom: 0;
+    height: 90%;
+    width: 200px;
+    background-color: var(--primary-900);
+    opacity: .7;
+    transition: all .3s ease-in-out;
+    left: -300px;
+    
+}
+
+.mover{
+    left:0px;
+}
+.gap-1 {
+    gap: 1em;
+
+}
+
+.spbt {
+    justify-content: space-between;
+}
+
+.cajax {
+    display: flex;
+}
+
+.contenedor {
+    display: grid;
+    place-items: center;
+    background-color: var(--secondary-100);
+    height: 200px;
+    width: 30%;
+    margin: auto;
+
+}
+
+.me-2 {
+    margin-left: .5em!important;
+}
+
+.check {
+    padding: 1em;
+    font-size: 2em;
+
+}
+
+.transparent {
+    color: transparent;
+}
+
+
+
+
+@media (orientation=landscape) {
+.tbody{
+    background-color: ;
+}
+
+
+}
+
+@media (orientation=portrait) {
+
+    
+
+}
+@media screen and (max-width: 920px) {
+
+    .contenedor {
+        width: 50%;
+        margin-bottom: 2em;
+    }
+
+}
+
+@media screen and (max-width: 480px) {
+    .cajax {
+        flex-direction: column;
+    }
+
+    .contenedor {
+        width: 100%;
+        margin-bottom: 2em;
+    }
+
+}

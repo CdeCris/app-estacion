@@ -1,0 +1,39 @@
+.main-empleado {
+    display: grid;
+    place-items: center;
+    width: 100%;
+
+    .agrandar {
+        height: 100%;
+        width: 60%;
+    }
+}
+
+.input_trasparente, .select_opc{
+    background: rgba(211, 211, 211, 0.2);
+    border: 1px solid white;
+    color: var(--blanco);
+    width: 85%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 15px;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+
+}
+.alineacion_izq{
+    width: 85%;
+}
+.Cammpo_btn{
+    display: flex;
+    margin: auto;
+    height: 90px;
+    width: 300px;
+}
+.opc_RolyState {
+    background-color: var(--violeta-claro);
+    color: var(--blanco);
+}
+

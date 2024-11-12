@@ -1,0 +1,111 @@
+/* main.main-grafico,main.main-informes{
+    .flex{
+        width: 85%;
+        justify-content: space-around;
+        align-items: center;
+        .titulo_productos{
+            width: 60%;
+            height: 100%;
+            justify-content: center;
+            align-items: end;
+            padding-right: 30px;
+
+        }
+    }
+    .contenedor_esta{
+        display: flex;
+        width: 40%;
+        justify-content: space-between;
+
+    }
+    .info_esta{
+        background-color: var(--violeta-claro); 
+        border: 2px solid white;
+        margin-left: 15px;
+        text-wrap: nowrap;
+    }
+    .content-title{
+        font-size: 20px;
+        height: 15%;
+        width: 100%;;
+    }
+    .titulo_productos{
+        text-align: center;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        height: 20%;
+        justify-content:space-around;
+        align-items: center;
+        border-radius: 5px;
+
+    }
+    .panel_admin{
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        height: 80%;
+        .titulo_produtos{
+            height: 10%;
+            width: 100%;
+            background-color: red;
+        }
+
+    }
+    .content_panel{
+        display: flex;
+        height: 90%;
+        width: 85%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+        background: rgba(211, 211, 211, 0.2);
+        border-radius: 15px;
+    }
+} */
+
+display: flex;
+padding-bottom: 15px;
+flex-direction: column;
+
+.info-contenedor {
+    flex: 0 0 calc(90%/6 - 15px - 0.5em);
+    border-radius: 15px 15px 10px 10px;
+    cursor: pointer;
+    background-color: rgb(207, 204, 204);
+    box-shadow: 5px 5px 5px -5px var(--gris-claro);
+
+    .btn_registro {
+        width: 70%;
+        background-color: var(--violeta-oscuro);
+        color: white;
+        border-radius: 1px;
+    }
+
+    .stock {
+        font-weight: 700;
+        color: rgb(62, 145, 62);
+        padding-left: 5px;
+    }
+
+    .contenedor_produ {
+        .imagen_produ {
+            position: relative;
+            width: 100%;
+            border-radius: 15px 15px 5px 5px;
+        }
+    }
+}
+
+.icon-absolute-abajo {
+    color: var(--naranja);
+    display: flex;
+    position: relative;
+    padding-left: 15px;
+    width: 100%;
+
+    .precio {
+        padding: 2px;
+    }
+}

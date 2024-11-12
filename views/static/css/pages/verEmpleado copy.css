@@ -1,0 +1,56 @@
+.main-VerEmpleado {
+    background-color: var(--azul-oscuro);
+    display: grid;
+    place-items: center;
+
+    h2 {
+        padding: 10px;
+        text-align: left;
+    }
+
+    .titulo-verEmpleado {
+        display: flex;
+        justify-content: space-between;
+        width: 80%;
+        margin: auto;
+        margin-bottom: 1em;
+
+        .agregarEmpleado {
+            background-color: var(--verde-claro);
+            padding: 10px 25px 10px 25px;
+            border-radius: 15px;
+        }
+        .buscador{
+            border-radius: 10px 0 0 10px;
+
+        }
+        .btn_lupa{
+            border-radius: 0 10px 10px 0;
+        }
+
+    }
+    .icon-absolute {
+        background: transparent;
+        border-radius: 5px;
+        color: var(--naranja);
+        position: absolute;
+        right: 0;
+        font-size: 30px;
+        margin: 10px;
+        margin-top: -5px;
+        cursor: pointer;
+    }
+
+    h4 {
+        padding: 10px;
+    }
+
+}
+
+.letra-blanca p:first-child {
+    margin-right: 1em;
+}
+
+h2 {
+    margin: auto;
+}

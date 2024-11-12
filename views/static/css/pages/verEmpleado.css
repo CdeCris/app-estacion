@@ -1,0 +1,125 @@
+.main-verInformes{
+    height: 75%;    
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;    
+    padding: 2em;
+
+    h2{
+        padding: 30px 30px 30px 20px ;
+        text-align: left;
+    }
+    .titulo-verEmpleado{
+        display: flex;
+        justify-content: space-between;
+        width: 80%;
+        margin: auto;
+        margin-bottom: 1em;
+       
+        .agregarEmpleado{
+            background-color: var(--verde-claro);
+            padding: 10px 25px 10px 25px;
+            border-radius: 15px;
+        }
+        .contenedor{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        
+    }
+    .table-body{
+        width: auto;
+        padding: 2em;
+        border-radius: 15px;
+        background: rgba(211, 211, 211, 0.2);
+        .tabla-empleado{
+            display: flex;
+            width: 100%;
+            backdrop-filter: blur(7px);
+            border-radius: .8rem;
+            overflow: hidden;
+            justify-content: center;
+            
+    
+            table, th, tr, td{
+                background-color: var(--gris-claro);
+                border-collapse: collapse;
+                padding: 1rem;
+                text-align: center;
+                
+            }
+            tr th{
+                background-color: var(--gris-oscuro);
+                padding: 15px;
+                position:sticky;
+                top: 0;
+                left: 0;
+                text-align: left;
+                text-align: center;
+
+            }
+    
+            tr:nth-child(even){
+                background-color: #0000000b;
+            }
+            tr:nth-child(odd){
+                background-color: var(--gris-claro);
+            }
+            tr:hover{
+                background: rgba(211, 211, 211, 0.2);
+            }
+            
+            tr td a {
+                border: none;
+                padding: 10px 25px;
+                border-radius: 15px;
+                margin-right: 5px; 
+                
+            }
+
+            tr td p:last-child{
+                border: none;
+                color: var(--verde-claro);
+            }
+            
+            tr td:nth-child(6){
+                border-radius: .0rem 0 0.5rem 0rem;
+            }
+            tr th:nth-child(6){
+                border-radius: 0rem 0.5rem 0 0;
+            }
+
+            tr:last-child{
+                background-color: transparent;
+                border: none;
+            }
+
+            .fondo_negro{
+                background-color: var(--gris-oscuro);
+            }
+
+            .naranja{
+                background-color: var(--naranja);
+                width: 100%;
+            }
+            .verde{
+                background-color: var(--verde-claro);
+            }
+            .celeste{
+                background-color: var(--celeste);
+            }
+        }
+        .flex{
+            display: flex;
+            gap: 10px;
+            flex-direction: row;
+            text-wrap: nowrap;
+            width: 100%;
+            justify-content: center;
+        }
+        
+    }
+}
+

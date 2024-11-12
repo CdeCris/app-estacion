@@ -1,0 +1,106 @@
+body {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    width: 100%;
+    font-family: sans-serif;
+}
+
+.letra-blanca {
+    color: var(--blanco);
+}
+
+.main-login {
+    height: 100%;
+    width: 100%;
+    background-color: var(--azul-oscuro);
+    display: flex;
+    padding: 1em;
+    .logo{
+        position: absolute;
+        height: 130px;
+        width: 180px;
+    }
+
+    .contenedor-login{
+        display: flex;
+        height: 80%;
+        width: 60%;
+        margin: auto;
+        font-family: 'Times New Roman', Times, serif;
+        text-align: center;
+
+        .login {
+            height: 100%;
+            width: 40%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+
+            .agrandar {
+                border-radius: 15px;
+                padding: 50px;
+                background: rgba(211, 211, 211, 0.2);
+                border: 1px solid white;
+                i{
+                    height: 20%;
+                    position: absolute;
+                }
+                .icon-right{
+                    display: flex;
+                    background-color: antiquewhite;
+                    position: relative;
+                    justify-content: end;
+                    align-items: end;
+
+                }
+            }
+        }
+    }
+
+    .imagen_login {
+        height: 91%;
+        width: 47%;
+        position: absolute;
+        /* background-color: #a8a7bb; */
+        bottom: 0;
+        right: -42px;
+        overflow: hidden;
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+        }
+    }
+}
+
+
+
+.linea_registro {
+    padding-left: 30px;
+}
+
+h4,
+form {
+    padding: 10px;
+}
+
+h4 {
+    padding-top: 10px;
+}
+
+h3 {
+    text-align: left;
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+
+input {
+    color: var(--blanco);
+}
+
+a {
+    color: var(--blanco);
+}

@@ -1,0 +1,6 @@
+.swal2-container {
+    max-width: calc(100vw - 10px) !important;
+    overflow-x: hidden !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+}

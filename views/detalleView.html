@@ -1,0 +1,24 @@
+@extern('header')
+@extern('navbar')
+	<main class="main-landing">
+		<div class="landing m12t letra-negra">
+
+			<!-- <span class="font-25 font-400">Bienvenido a App-Estación: Datos Meteorológicos en Tiempo Real</span> -->
+			<template id="template_estacion">
+				<div class="content_estacion">
+					<div class="estacion_title">
+						<span class="estacion_nombre"></span>
+					</div>
+					<div class="footer_card">
+						<span class="estacion_ubicacion"></span>
+					</div>
+				</div>
+			</template>
+
+			<div id="detalle__estacion" class="panel_admin"></div>
+
+		</div>
+	</main>
+    <script src="{{APP_URL_BASE}}/views/static/js/stationDetails.js"></script>
+
+@extern('footer')
