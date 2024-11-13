@@ -17,7 +17,7 @@
     --background-main: rgba(143, 157, 231, 0.164);
     --background-login: rgba(20, 29, 82, 0.9);
     --background-form: rgba(211, 211, 211, 0.2);
-    --background-header: rgba(20, 29, 82, 0.7);
+    --background-header: #36393e;
     --background-sidenav: rgb(91, 97, 134); 
     --background-nav: rgba(20, 29, 82,0.8);
     
@@ -42,6 +42,45 @@
     --btn-verde: #1cac49;
     --btn-rojo: #f32e2e;
 }
+
+.chart_control {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+button.btn_chart_change {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: #d9d9f1;
+    border-radius: 0.4rem;
+    box-shadow: -2px 2px 4px 0px #b5b5b5;
+    cursor: pointer;
+}
+
+.btn_selected {
+    color: #6400ff!important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .hover_logout:hover{
     color: var(--btn-rojo);
@@ -343,6 +382,12 @@ header .enlaces {
     display: flex;
     flex-direction: row;
     padding: .25em;
+}
+div#enlacesHead {
+    width: 40%;
+    justify-content: end;
+    gap: 10%;
+    padding-right: 1rem;
 }
 
 .ocultar {
@@ -860,6 +905,7 @@ main.main-landing {
     .landing {
         display: flex;
         flex-direction: column;
+        align-items: center;
         gap: 20px;
         width: 80%;
         padding: 1em;
