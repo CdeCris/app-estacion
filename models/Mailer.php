@@ -42,19 +42,43 @@
 	        $mail->Password = $_ENV["MAILER_PASSWORD"];
 
 	        $mail->setFrom($_ENV["MAILER_REMITENTE"], $_ENV["MAILER_NOMBRE"]);
-	        $mail->addAddress($destinatario);
+	        
+	        if(is_string($destinatario)){
+		        $mail->addAddress($destinatario);
 
-	        $mail->isHTML(true);
+		        $mail->isHTML(true);
 
-	        $mail->Subject = utf8_decode($motivo);
-	        $mail->Body = utf8_decode($contenido);
+		        $mail->Subject = utf8_decode($motivo);
+		        $mail->Body = utf8_decode($contenido);
 
-	        if(!$mail->send()){
-	            error_log("Mailer no se pudo enviar el correo!" );
-				$body = array("errno" => 1, "error" => "No se pudo enviar.");
-	        }else{
-				$body = array("errno" => 0, "error" => "Enviado con exito.");
-			}   
+		        if(!$mail->send()){
+		            error_log("Mailer no se pudo enviar el correo!" );
+					$body = array("errno" => 1, "error" => "No se pudo enviar.");
+		        }else{
+					$body = array("errno" => 0, "error" => "Enviado con exito.");
+				}   
+	        }
+	        else{
+	        	if (count($destinatario)>0) {
+	        		$mail->addAddress($_ENV['MAILER_REMITENTE']);
+	        		foreach ($destinatario as $key => $email) {
+	        			$mail->addBCC($email);
+
+				    }
+
+				        $mail->isHTML(true);
+
+				        $mail->Subject = utf8_decode($motivo);
+				        $mail->Body = utf8_decode($contenido);
+
+				        if(!$mail->send()){
+				            error_log("Mailer no se pudo enviar el correo!" );
+							$body = array("errno" => 1, "error" => "No se pudo enviar.");
+				        }else{
+							$body = array("errno" => 0, "error" => "Enviado con exito.");
+						}   
+				}
+	        } 
 	 
 			return $body;
 		}

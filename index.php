@@ -2,7 +2,6 @@
 
 	include_once 'env.php';
 
-
 	include 'lib/mp-mailer/Mailer/src/PHPMailer.php';
 	include 'lib/mp-mailer/Mailer/src/SMTP.php';
 	include 'lib/mp-mailer/Mailer/src/Exception.php';
@@ -12,7 +11,7 @@
 	include_once 'models/User.php';
 
 	// incluimos la libreria que genera los pdf
-	require ('lib/fpdf/fpdf.php');
+	// require ('lib/fpdf/fpdf.php');
 
 	// Inicia la sesión
 	session_start();
@@ -38,42 +37,36 @@
 
 	//=== firewall
 
-	// // Listas de acceso dependiendo del estado del usuario
-	// $controlador_login = ["logout", "perfil", "abandonar", "chartList", "details","panel","graficos","myProducts","detalleCompra"];
-	// $controlador_anonimo = ["landing", "login", "register","panel","graficos","myProducts"];
+	// Listas de acceso dependiendo del estado del usuario
+	$controlador_login = ["logout", "detalle"];
+	$controlador_anonimo = ["landing", "login", "register", "validate", "blocked", "recovery", "reset"];
 
-	// // sesion iniciada
-	// if(isset($_SESSION['innovplast'])){
+	// sesion iniciada
+	if(isset($_SESSION['app-estacion'])){
 
-	// 	$controlador_default = "productList";
-	// 	if ($_SESSION['innovplast']['user']->is_admin) {
-	// 		$controlador_anonimo = ["landing", "login", "register" ];
-	// 		$controlador_default = "panel";
-	// 	}
+		// recorre la lista de secciones no permitidas
+		foreach ($controlador_anonimo as $key => $value) {
+			// si esta solicitando una sección no permitida
+			if($controlador==$value){
+				$controlador = "panel";
+				break;
+			}
+		}
 
-	// 	// recorre la lista de secciones no permitidas
-	// 	foreach ($controlador_anonimo as $key => $value) {
-	// 		// si esta solicitando una sección no permitida
-	// 		if($controlador==$value){
-	// 			$controlador = $controlador_default;
-	// 			break;
-	// 		}
-	// 	}
+	}else{ // sesión no iniciada
 
-	// }else{ // sesión no iniciada
+			// recorre la lista de secciones no permitidas
+			foreach ($controlador_login as $key => $value) {
+			// si esta solicitando una sección no permitida
+			if($controlador==$value){
+				$controlador = "login";
+				break;
+			}
+		}
 
-	// 		// recorre la lista de secciones no permitidas
-	// 		foreach ($controlador_login as $key => $value) {
-	// 		// si esta solicitando una sección no permitida
-	// 		if($controlador==$value){
-	// 			$controlador = "productList";
-	// 			break;
-	// 		}
-	// 	}
+	}
 
-	// }
-
-	// === fin firewall
+	//=== fin firewall
 
 	include 'controllers/'.$controlador.'Controller.php';
 

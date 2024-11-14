@@ -1,0 +1,39 @@
+@extern('header')
+
+
+
+	<header>
+	    <div class="logo">
+	       <a href="{{APP_URL_BASE}}/landing"><img src="{{APP_URL_LOGO_MAIN}}" alt=""></a>
+	    </div>
+	</header>
+	<main class="main-landing">
+
+		<div class="landing m12t letra-negra">
+			<!-- <span class="font-25 font-400">Bienvenido a App-Estación: Datos Meteorológicos en Tiempo Real</span> -->
+			<form action="" method="POST" id="form_reset" class="form-reset d-none">
+				<input class="input_pass" type="password" name="txt_pass" placeholder="Ingrese su Contraseña">
+                <input class="input_pass" type="password" name="txt_pass_2" placeholder="Repita su Contraseña">
+                <input class="btn_save" type="submit" name="btn_submit" value="Guardar">
+			</form>
+			<div id="box_charge" class="d-none">
+				<div class="loading-container">
+			        <div class="circle outer-circle"></div>
+			        <div class="circle outer-circle-parent"></div>
+			        <div class="circle inner-circle"></div>
+			        <div class="circle inner-circle-parent"></div>
+			    </div>
+			    <div class="menssage_charge">
+			    	Reestableciendo la cuenta, aguarde un segundo...
+			    </div>
+			</div>
+			<div id="error_conteiner" class="d-none">
+				<div id="error_icon_check" class="error-icon check">&#10003;</div>
+				<div id="error_icon_cruz" class="error-icon cruz">&#10005;</div>
+				<div id="error_msg" class="error-msg"></div>
+			</div>
+		</div>
+	</main>
+    <script src="{{APP_URL_BASE}}/views/static/js/reset.js"></script>
+
+@extern('footer')

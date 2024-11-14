@@ -14,9 +14,19 @@
 					</div>
 				</div>
 			</template>
-
 			<div id="detalle__estacion" class="panel_admin"></div>
 
+			<div class="chart_control">
+				<button class="btn_chart_change" onclick="setChart(this)" value="tem" id="btn_tem">Temperatura</button>
+				<button class="btn_chart_change" onclick="setChart(this)" value="vie" id="btn_vie">Viento</button>
+				<button class="btn_chart_change" onclick="setChart(this)" value="hum" id="btn_hum">Humedad</button>
+				<button class="btn_chart_change" onclick="setChart(this)" value="pre" id="btn_pre">Presion</button>
+				<button class="btn_chart_change" onclick="setChart(this)" value="rin" id="btn_rin">Riesgo de Incendio</button>
+			</div>
+			<div class="chart_info"></div>
+			<div id="chart-container" class="chart_container">
+                <canvas id="donutChart" width="800" height="300"></canvas>
+            </div>
 		</div>
 	</main>
     <script src="{{APP_URL_BASE}}/views/static/js/stationDetails.js"></script>

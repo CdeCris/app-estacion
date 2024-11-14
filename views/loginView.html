@@ -1,9 +1,21 @@
 @extern('header')
+<!-- {{APP_URL_LOGO_MAIN}} -->
+
+<div id="window_charge" class="d-none">
+    <div id="box_charge">
+        <div class="loading-container">
+            <div class="circle outer-circle"></div>
+            <div class="circle outer-circle-parent"></div>
+            <div class="circle inner-circle"></div>
+            <div class="circle inner-circle-parent"></div>
+        </div>
+        <div class="menssage_charge">
+            Iniciando Sesion...
+        </div>
+    </div>
+</div>
 
 <div class="hiden main-login">
-        <div class="logo">
-            <a href="{{APP_URL_BASE}}/landing"><img src="{{APP_URL_LOGO_MAIN}}" alt=""></a>
-        </div>
         <div class="contenedor-login">
             <div class="login letra-blanca">
                 <form action="">
@@ -23,24 +35,13 @@
                     </div>
                     <span id="msg_box"></span>
                     <input type="submit" value="Iniciar sesión" class="btn_registro" id="btn_login">
-                    <span class="font-resgistro">¿Olvidaste tu contraseña?</span><br>
+                    <a href="{{APP_URL_BASE}}/recovery" class="font-resgistro">¿Olvidaste tu contraseña?</a><br>
                     <span class="font-resgistro"><a href="{{APP_URL_BASE}}/register" class="font-registro">No tenes cuenta? Registrate</a></span>
                 </form>
             </div>
         </div>
-                <div class="imagen_login"><img src="{{APP_URL_BASE}}/views/static/img/system/Innovplast_Mano.png" alt=""></div>
+        <div class="imagen_login"><img src="{{APP_URL_BASE}}/views/static/img/system/logo_app.png" alt=""></div>
     </div>
-<!-- 
-	 <h1>Bienvenido al login</h1>
-	<form action="" method="POST">
-		<input type="text" name="txt_email" id="txt_email" placeholder="Email">
-		<input type="password" name="txt_pass" id="txt_pass" placeholder="Contraseña">
-		<input type="submit" name="btn_login" id="btn_login" value="Ingresar">
-		<div id="msg_box"></div>
-	</form>
-	<a href="register">Registro</a>
-	<a href="getpass">Olvido su contraseña?</a>
- -->
-<!-- 	<script src="{{APP_URL_BASE}}/views/static/js/frontend/login.js"></script> -->
+
     <script src="{{APP_URL_BASE}}/views/static/js/frontend/ojito.js"></script>
-    <script src="{{APP_URL_BASE}}/views/static/js/backend/login.js"></script>
+    <script src="{{APP_URL_BASE}}/views/static/js/login.js"></script>

@@ -32,7 +32,7 @@
 			parent::__construct();
 
 			/**< Obtiene la estructura de la tabla */
-			$result = $this->query('DESCRIBE `Innovplast__usuario`');
+			$result = $this->query('DESCRIBE `app_estacion__usuario`');
 
 			foreach ($result as $key => $row) {
 				$buff =$row["Field"];
@@ -58,7 +58,7 @@
 			$ID_USUARIO = $this->ID_USUARIO;
 			$fecha_hora = date("Y-m-d H:i:s");
 
-			$ssql = "UPDATE `Innovplast__usuario` SET delete_at='$fecha_hora' WHERE ID_USUARIO=$ID_USUARIO";
+			$ssql = "UPDATE `app_estacion__usuario` SET delete_at='$fecha_hora' WHERE ID_USUARIO=$ID_USUARIO";
 
 			$this->query($ssql);
 
@@ -103,7 +103,7 @@
 			$email = $form["txt_email"];
 
 			/*< consultamos si existe el email*/
-			$result = $this->query("CALL `Innovplast_Login`('$email')");
+			$result = $this->query("CALL `app_estacion_Login`('$email')");
 
 			// el email no existe
 			if(count($result)==0){
@@ -112,28 +112,103 @@
 
 			/*< seleccionamos solo la primer fila de la matriz*/
 			$result = $result[0];
+		
+
+			//Inicio del ChatgGPT Moment xd
+			$ip = $_SERVER['REMOTE_ADDR'] ?? 'IP no disponible';
+
+			// Si estás detrás de un proxy, intenta obtener la IP real
+			if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+			    $ip = $_SERVER['HTTP_CLIENT_IP'];
+			} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+			}
+
+			$navegador = $_SERVER['HTTP_USER_AGENT'];
+
+			$sistemaOperativo = "Desconocido";
+
+			if (strpos($navegador, 'Windows') !== false) {
+			    $sistemaOperativo = "Windows";
+			} elseif (strpos($navegador, 'Mac') !== false) {
+			    $sistemaOperativo = "MacOS";
+			} elseif (strpos($navegador, 'Linux') !== false) {
+			    $sistemaOperativo = "Linux";
+			} elseif (strpos($navegador, 'Android') !== false) {
+			    $sistemaOperativo = "Android";
+			} elseif (strpos($navegador, 'iPhone') !== false) {
+			    $sistemaOperativo = "iOS";
+			}
+			//Fin del ChatgGPT Moment
+
 
 			// si el email existe y la contraseña es valida
-			if($result["password"]==md5($form["txt_pass"]."innovplast")){
+			if($result["contrasenia"]==md5($form["txt_pass"]."app-estacion")){
 
-				if(!$result["validado"]){
+				if(!$result["activo"]){
 					return ["error" => "Aún no ha validado su email, revise su casilla de correos", "errno" => 405];
 				}
+
+				if($result["bloqueado"]){
+					return ["error" => "Su usuario está bloqueado, revise su casilla de correo", "errno" => 406];
+				}
+
+				if($result["recupero"]){
+					return ["error" => "Su usuario está bloqueado, revise su casilla de correo", "errno" => 407];
+				}
+
+				/*< instancia la clase Mailer para enviar el correo electrónico de validación de correo electrónico*/
+				$correo = new Mailer();
+
+				// crea el objeto con la vista
+				$tpl = new ACME("emails/loginSuccess");
+
+				// carga la vista
+				$tpl->loadTPLFromAPI();
+
+				$vars = ["TOKEN_USER" => $result["token"], "IP_CLIENTE" => $ip, "NAVEGADOR_WEB" => $navegador, "SISTEMA_OPERATIVO" => $sistemaOperativo, "APP_URL_BASE" => $_ENV["APP_URL_BASE"]];
+
+				/*< pasa el valor de la variable token a la vista*/
+				$tpl->setVarsTPL($vars);
+
+				/*< plantilla de email para validar cuenta*/
+				$cuerpo_email = $tpl->returnTPL();
+
+				/*< envia el correo electrónico de validación*/
+				$correo->send(["destinatario" => $result["email"], "motivo" => "Nuevo Inicio de Sesion", "contenido" => $cuerpo_email] );
 
 				/**< autocarga de valores en los atributos de la clase */
 				foreach ($this->nameOfFields as $key => $value) {
 					$this->$value = $result[$value];
 				}
-				$this->is_admin = $result["admin"];
-				// para que los avatares sean gatitos
-				//$this->avatar = str_replace("set5", "set4", $this->avatar); 
 
 				/*< carga la clase en la sesión*/
-				$_SESSION["innovplast"]['user'] = $this;
+				$_SESSION["app-estacion"]['user'] = $this;
 
 				/*< usuario valido*/
-				return ["error" => "", "errno" => 200, "admin" => $this->is_admin];
+				return ["error" => "", "errno" => 200];
 			}
+
+			/*< instancia la clase Mailer para enviar el correo electrónico de validación de correo electrónico*/
+			$correo = new Mailer();
+
+			// crea el objeto con la vista
+			$tpl = new ACME("emails/loginFailure");
+
+			// carga la vista
+			$tpl->loadTPLFromAPI();
+
+			$vars = ["TOKEN_USER" => $result["token"], "IP_CLIENTE" => $ip, "NAVEGADOR_WEB" => $navegador, "SISTEMA_OPERATIVO" => $sistemaOperativo, "APP_URL_BASE" => $_ENV["APP_URL_BASE"]];
+
+			/*< pasa el valor de la variable token a la vista*/
+			$tpl->setVarsTPL($vars);
+
+			/*< plantilla de email para validar cuenta*/
+			$cuerpo_email = $tpl->returnTPL();
+
+			/*< envia el correo electrónico de validación*/
+			$correo->send(["destinatario" => $result["email"], "motivo" => "Intento de Inicio de Sesion", "contenido" => $cuerpo_email] );
+
 
 			// email existe pero la contraseña invalida
 			return ["error" => "Error en las credenciales", "errno" => 405];
@@ -150,7 +225,7 @@
 		function register($form){
 
 			/*< recupera el email*/
-			$email = $form["txt_email"];
+			$email = $form->email;
 
 			/*< evalúa si el email es válido */
 		    $email_valido = preg_match('/^[a-zA-Z0-9._%+-]+@gmail\.com$/', $email);
@@ -161,85 +236,44 @@
 			}
 
 			/*< evalúa si la contraseña es válida */
-		    $pass_valida = preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{4,}$/', $form["txt_pass"]);
+			$pass_valida = preg_match('/^\S{4,}$/', $form->pass);
 		
 			/*< si la contraseña no es valida */
 			if (!$pass_valida) {
-				return ["error" => "Verifique las requisitos necesarios para la contraseña ", "errno" => 406];
+				return ["error" => "La contraseña no debe contener espacion y tener al menos 4 caracteres ", "errno" => 406];
 			}
 
 			/*< si las contraseñas ingresadas no son iguales */
-			if (!($form["txt_pass"] == $form["txt_pass_2"])) {
+			if (!($form->pass == $form->sec_pass)) {
 				return ["error" => "Verifique que las contraseña ingresadas sean iguales ", "errno" => 407];
 			}
 
 
 			/*< consulta si el email ya esta en la tabla de usuarios*/
-			$result = @$this->query("SELECT * FROM `Innovplast__usuario` WHERE email = '$email'")[0];
+			$result = @$this->query("SELECT * FROM `app_estacion__usuario` WHERE email = '$email'")[0];
 
 			// el email no existe entonces se registra
 			if(is_null($result)){
 
 				/*< encripta la contraseña*/
-				$pass = md5($form["txt_pass"]."innovplast");
+				$pass = md5($form->pass."app-estacion");
 
 				/*< se crea el token único para validar el correo electrónico*/
 				$token_email = md5($_ENV['PROJECT_WEB_TOKEN'].$email.mt_rand(0,5000));
 
 				$token_user = md5($_ENV['PROJECT_WEB_TOKEN'].$email);
 
-				$avatar_default = $_ENV['APP_URL_BASE'].'/views/static/img/system/user_default.png';
-
-				// Verifica si la IP está en un proxy
-			    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-
-			        $ip = $_SERVER['HTTP_CLIENT_IP'];
-
-			    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-
-			        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-
-			    } else {
-
-			        $ip = $_SERVER['REMOTE_ADDR'];
-
-			    }
-
 				/*< agrega el nuevo usuario*/
 				//$ssql = "CALL `Innovplast_Register`('$token_email','$email','$pass')";
-				$ssql = "INSERT INTO `Innovplast__usuario` (`token`, `email`, `password`,`ip`, `avatar`, `date_at`, `update_at`, `delete_at`) VALUES ('$token_user', '$email', '$pass', '$ip', '$avatar_default', CURRENT_TIMESTAMP, '0000-00-00 00:00:00', '0000-00-00 00:00:00')";
+				$ssql = "INSERT INTO `app_estacion__usuario` (`token`, `email`, `nombres`, `contrasenia`, `activo`, `bloqueado`, `recupero`, `token_action`, `add_date`, `update_date`, `delete_date`, `active_date`, `blocked_date`, `recover_date`) VALUES ('$token_user', '$email', ' ', '$pass', '0', '0', '0', '$token_email', CURRENT_TIMESTAMP, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00')";
 
 				/*< ejecuta la consulta*/
 				$result = $this->query($ssql);
 
 				/*< se recupera el id del nuevo usuario*/
 				$this->id_user = $this->db->insert_id;
+
 				$id_user = $this->id_user;
-
-				/*< agrega el token del usuario para su posterior validacion de su email*/
-				$ssql = "CALL `Innovplast_SetToken`('$token_email','$id_user')";
-
-				/*< ejecuta la consulta*/
-				$result = $this->query($ssql);
-
-				/*< setea al usuario como activo, no validado y no administrador*/
-				$ssql = "CALL `Innovplast_SetEstado`('$id_user')";
-
-				/*< ejecuta la consulta*/
-				$result = $this->query($ssql);
-
-				/*< inserta al usuario como parte de la empresa innovplast */
-				$ssql = "INSERT INTO `Innovplast__empresa_usuario` (`ID_EMPRESA`, `ID_USUARIO`, `activo`, `date_at`, `update_at`, `delete_at`) VALUES (1, '$id_user',1, CURRENT_TIMESTAMP, '0000-00-00 00:00:00', '0000-00-00 00:00:00');";
-
-				/*< ejecuta la consulta*/
-				$result = $this->query($ssql);
-
-				/*< inserta la accion en la base de datos */
-				$ssql = "INSERT INTO `Innovplast__log` (`titulo`, `ID_USUARIO`, `date_at`, `update_at`, `delete_at`) VALUES ('user_register_successfully', '$id_user', CURRENT_TIMESTAMP, '0000-00-00 00:00:00', '0000-00-00 00:00:00');";
-
-				/*< ejecuta la consulta*/
-				$result = $this->query($ssql);
-
 
 				/*< instancia la clase Mailer para enviar el correo electrónico de validación de correo electrónico*/
 				$correo = new Mailer();
@@ -248,16 +282,15 @@
 				$tpl = new ACME("emails/register");
 
 				// carga la vista
-				$tpl->loadTPL();
+				$tpl->loadTPLFromAPI();
 
-				$vars = ["TOKEN_EMAIL" => $token_email];
+				$vars = ["TOKEN_EMAIL" => $token_email, "APP_URL_BASE" => $_ENV["APP_URL_BASE"]];
 
 				/*< pasa el valor de la variable token a la vista*/
 				$tpl->setVarsTPL($vars);
 
 				/*< plantilla de email para validar cuenta*/
 				$cuerpo_email = $tpl->returnTPL();
-
 
 				/*< envia el correo electrónico de validación*/
 				$correo->send(["destinatario" => $email, "motivo" => "Confirmación de registro", "contenido" => $cuerpo_email] );
@@ -269,14 +302,14 @@
 			$date_zero = '0000-00-00 00:00:00';
 
 			// El usuario volvio a la aplicacion
-			if($result['delete_at']!=$date_zero){
+			if($result['delete_date']!=$date_zero){
 
 				/*< recupera el id del usuario que quiere volver a nuestra app*/
 				$ID_USUARIO=$result["ID_USUARIO"];
 				$this->ID_USUARIO = $result["ID_USUARIO"];
 
 				/*< encripta la nueva contraseña*/
-				$pass = md5($form["txt_pass"]."innovplast");
+				$pass = md5($form["txt_pass"]."app_estacion");
 
 				/*< consulta para volver a activar el usuario que se había ido*/
 				//$ssql = "UPDATE `App-ACME__usuario` SET nombre='', apellido='', `password`='$pass', delete_at='0000-00-00 00:00:00' WHERE ID_USUARIO=$ID_USUARIO";
@@ -293,127 +326,193 @@
 
 		}
 
+		/**
+		 * 
+		 * @brief Retorna un listado limitado
+		 * @param string $request_method espera a GET
+		 * @param array $request [inicio][cantidad]
+		 * @return array lista con los datos de los usuarios 
+		 * 
+		 * */
+		function validate($request){
+
+			$token = $request["token_action"];
+
+			$ssql= "SELECT * FROM `app_estacion__usuario` WHERE `app_estacion__usuario`.`token_action` LIKE '$token' AND `activo` = 0";
+			
+			$user = $this->query($ssql);
+			
+			if (!$user) {
+				return ["errno" => 416, "error" => "El token no corresponde a un usuario"];
+			}
+
+			$result = $this->query("UPDATE `app_estacion__usuario` SET `app_estacion__usuario`.`activo` = '1', `app_estacion__usuario`.`token_action` = null, `app_estacion__usuario`.`active_date` = CURRENT_TIMESTAMP WHERE `app_estacion__usuario`.`token_action` LIKE '$token';");
+
+			/*< instancia la clase Mailer para enviar el correo electrónico de validación de correo electrónico*/
+			$correo = new Mailer();
+
+			// crea el objeto con la vista
+			$tpl = new ACME("emails/active");
+
+			// carga la vista
+			$tpl->loadTPLFromAPI();
+
+			/*< plantilla de email para validar cuenta*/
+			$cuerpo_email = $tpl->returnTPL();
+
+			/*< envia el correo electrónico de validación*/
+			$correo->send(["destinatario" => $user[0]["email"], "motivo" => "Cuenta Activada", "contenido" => $cuerpo_email] );
+
+			return ["errno" => 200, "error" => "Correo validado con exito, inicie sesion!"];
+		}
+
 
 		/**
 		 * 
-		 * Actualiza los datos del usuario con los datos de un formulario
-		 * @param array $form es un arregle asociativo con los datos a actualizar
-		 * @return array arreglo con el código de error y descripción
+		 * @brief Retorna un listado limitado
+		 * @param string $request_method espera a GET
+		 * @param array $request [inicio][cantidad]
+		 * @return array lista con los datos de los usuarios 
 		 * 
 		 * */
-		function update($form){
+		function blockAccount($request){
 
-			$nombre = $form["txt_first_name"];
-			$apellido = $form["txt_last_name"];
-			$email = $form["txt_email_user"];
-			$telefono = $form["txt_tel_user"];
-			$domicilio = $form["txt_dir_user"];
+			$token = $request["token"];
 
-			$id_user = $this->ID_USUARIO;
+			$ssql= "SELECT * FROM `app_estacion__usuario` WHERE `app_estacion__usuario`.`token` LIKE '$token'";
+			
+			$user = $this->query($ssql);
+			
+			if (!$user) {
+				return ["errno" => 416, "error" => "El token no corresponde a un usuario"];
+			}
 
-			$this->nombre = $nombre;
-			$this->apellido = $apellido;
-			$this->email = $email;
-			$this->telefono = $telefono;
-			$this->domicilio = $domicilio;
+			if ($user[0]["bloqueado"]) {
+				return ["errno" => 200, "error" => "Esta cuenta ya ha sido bloqueada"];
+			}
 
-			$ssql = "UPDATE `Innovplast__usuario` SET `Innovplast__usuario`.`nombre`='$nombre', `Innovplast__usuario`.`apellido`='$apellido', `Innovplast__usuario`.`email`='$email', `Innovplast__usuario`.`telefono`='$telefono', `Innovplast__usuario`.`domicilio`='$domicilio' WHERE `Innovplast__usuario`.`ID_USUARIO`= '$id_user';";
+			$result = $this->query("UPDATE `app_estacion__usuario` SET `app_estacion__usuario`.`bloqueado` = '1', `app_estacion__usuario`.`blocked_date` = CURRENT_TIMESTAMP WHERE `app_estacion__usuario`.`token` LIKE '$token';");
+
+			/*< instancia la clase Mailer para enviar el correo electrónico de validación de correo electrónico*/
+			$correo = new Mailer();
+
+			// crea el objeto con la vista
+			$tpl = new ACME("emails/blocked");
+
+			// carga la vista
+			$tpl->loadTPLFromAPI();
+
+			$token_action = md5($_ENV['PROJECT_WEB_TOKEN'].$token.mt_rand(0,5000));
+
+			$vars = ["TOKEN_ACTION" => $token_action, "APP_URL_BASE" => $_ENV["APP_URL_BASE"]];
+
+			/*< pasa el valor de las variables a la vista*/
+			$tpl->setVarsTPL($vars);
+
+			/*< plantilla de email para validar cuenta*/
+			$cuerpo_email = $tpl->returnTPL();
+
+			/*< envia el correo electrónico de validación*/
+			$correo->send(["destinatario" => $user[0]["email"], "motivo" => "Cuenta Bloqueada", "contenido" => $cuerpo_email] );
+
+			return ["errno" => 200, "error" => "Usuario bloqueado, revise su correo electrónico"];
+		}
+
+		/**
+		 * 
+		 * @brief Retorna un listado limitado
+		 * @param string $request_method espera a GET
+		 * @param array $request [inicio][cantidad]
+		 * @return array lista con los datos de los usuarios 
+		 * 
+		 * */
+		function resetAccount($request){
+
+			$pass = $request->pass;
+			$pass2 = $request->sec_pass;
+			$token_action = $request->token;
+
+			if (!($pass == $pass2)) {
+				return ["errno" => 404, "error" => "Las contraseñas ingresadas deben ser iguales"];
+			}
+
+			$new_pass = md5($pass."app-estacion");
+
+			$ssql = "SELECT * FROM `app_estacion__usuario` WHERE `app_estacion__usuario`.`token_action` LIKE '$token_action';";
+
+			$user = @$this->query($ssql)[0];
+			
+			$ssql = "UPDATE `app_estacion__usuario` SET `app_estacion__usuario`.`contrasenia` = '$new_pass', `app_estacion__usuario`.`token_action` = null, `app_estacion__usuario`.`bloqueado` = 0, `app_estacion__usuario`.`recupero` = 0, `app_estacion__usuario`.`recover_date` = CURRENT_TIMESTAMP  WHERE `app_estacion__usuario`.`token_action` LIKE '$token_action';";
 
 			$result = $this->query($ssql);
 
-			return ["error" => "Actualizado con éxito", "errno" => 200];
+
+			//Inicio del ChatgGPT Moment xd
+			$ip = $_SERVER['REMOTE_ADDR'] ?? 'IP no disponible';
+
+			// Si estás detrás de un proxy, intenta obtener la IP real
+			if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+			    $ip = $_SERVER['HTTP_CLIENT_IP'];
+			} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+			}
+
+			$navegador = $_SERVER['HTTP_USER_AGENT'];
+
+			$sistemaOperativo = "Desconocido";
+
+			if (strpos($navegador, 'Windows') !== false) {
+			    $sistemaOperativo = "Windows";
+			} elseif (strpos($navegador, 'Mac') !== false) {
+			    $sistemaOperativo = "MacOS";
+			} elseif (strpos($navegador, 'Linux') !== false) {
+			    $sistemaOperativo = "Linux";
+			} elseif (strpos($navegador, 'Android') !== false) {
+			    $sistemaOperativo = "Android";
+			} elseif (strpos($navegador, 'iPhone') !== false) {
+			    $sistemaOperativo = "iOS";
+			}
+			//Fin del ChatgGPT Moment
+
+			/*< instancia la clase Mailer para enviar el correo electrónico de validación de correo electrónico*/
+			$correo = new Mailer();
+
+			// crea el objeto con la vista
+			$tpl = new ACME("emails/loginSuccess");
+
+			// carga la vista
+			$tpl->loadTPLFromAPI();
+
+			$vars = ["TOKEN_USER" => $user["token"], "IP_CLIENTE" => $ip, "NAVEGADOR_WEB" => $navegador, "SISTEMA_OPERATIVO" => $sistemaOperativo, "APP_URL_BASE" => $_ENV["APP_URL_BASE"]];
+
+			/*< pasa el valor de la variable token a la vista*/
+			$tpl->setVarsTPL($vars);
+
+			/*< plantilla de email para validar cuenta*/
+			$cuerpo_email = $tpl->returnTPL();
+
+			/*< envia el correo electrónico de validación*/
+			$correo->send(["destinatario" => $user["email"], "motivo" => "Cuenta Reestablecida", "contenido" => $cuerpo_email] );
+
+			return ["errno" => 200, "error" => "Su cuenta ha sido reestablecida"];
+
+		
 		}
 
-		/**
-		 * 
-		 * Cantidad de usuarios registrados
-		 * @return int cantidad de usuarios registrados
-		 * 
-		 * */
-		function getCantUsers(){
+		function verifyToken($request) {
 
-			$result = $this->query("SELECT * FROM users");
+			$token_action = $request["token_action"];
 
-			return $this->db->affected_rows;
-		}
+			$ssql = "SELECT * FROM `app_estacion__usuario` WHERE `app_estacion__usuario`.`token_action` LIKE '$token_action';";
 
-
-		/**
-		 * 
-		 * @brief Retorna un listado limitado
-		 * @param string $request_method espera a GET
-		 * @param array $request [inicio][cantidad]
-		 * @return array lista con los datos de los usuarios 
-		 * 
-		 * */
-		function getAllUsers($request){
-
-			$request_method = $_SERVER["REQUEST_METHOD"];
-
-			/*< Es el método correcto en HTTP?*/
-			if($request_method!="GET"){
-				return ["errno" => 410, "error" => "Metodo invalido"];
-			}
-
-			/*< Solo un usuario logueado puede ver el listado */
-			if(!isset($_SESSION["morphyx"])){
-				return ["errno" => 411, "error" => "Para usar este método debe estar logueado"];
-			}
-
-			/*
-
-			if(!isset($_SESSION["morphyx"]['user_level'])){
-
-				if($_SESSION["morphyx"]['user_level']!='admin'){
-				return ["errno" => 412, "error" => "Solo el 	administrador puede utilizar el metodo"];
-				}
-			}
-
-			*/
-
-
-			$inicio = 0;
-
-			if(isset($request["inicio"])){
-				$inicio = $request["inicio"];
-			}
-
-			if(!isset($request["cantidad"])){
-				return ["errno" => 404, "error" => "falta cantidad por GET"];
-			}
-
-			$cantidad = $request["cantidad"];
-
-			$result = $this->query("SELECT * FROM users LIMIT $inicio, $cantidad");
-
-			return $result;
-		}
-
-		/**
-		 * 
-		 * @brief Retorna un listado limitado
-		 * @param string $request_method espera a GET
-		 * @param array $request [inicio][cantidad]
-		 * @return array lista con los datos de los usuarios 
-		 * 
-		 * */
-		function verify($request){
-
-			$token = $request["TOKEN_EMAIL"];
-
-			$ssql= "SELECT * FROM `Innovplast__token` WHERE `token_email` LIKE '$token' AND `token_activo` = 1";
+			$user = @$this->query($ssql)[0];
 			
-			$result = $this->query($ssql);
-			
-			var_dump($result);
-
-			if (!$result) {
-				return ["errno" => 416, "error" => "Token inválido"];
+			if (!is_null($user)) {
+				return ["errno" => 200, "error" => ""];
 			}
 
-			$result = $this->query("UPDATE `Innovplast__estado` INNER JOIN `Innovplast__token` ON `Innovplast__estado`.`ID_USUARIO` = `Innovplast__token`.`ID_USUARIO` SET `Innovplast__estado`.validado = '1',`Innovplast__token`.token_activo = '0' WHERE `Innovplast__token`.`token_email` = '$token';");
+			return ["errno" => 404, "error" => "El token no corresponde a un usuario"];
 
-			return ["errno" => 200, "error" => "Correo validado con éxito"];
 		}
 
 		/**
@@ -424,10 +523,10 @@
 		 * @return array lista con los datos de los usuarios 
 		 * 
 		 * */
-		function sendRecoveryEmail($request){
+		function recovery($request){
 
 			/*< recupera el email*/
-			$email = $request["txt_email"];
+			$email = $request->email;
 
 			/*< evalúa si el email es válido */
 		    $email_valido = preg_match('/^[a-zA-Z0-9._%+-]+@gmail\.com$/', $email);
@@ -437,201 +536,43 @@
 				return ["error" => "Correo inválido", "errno" => 406];
 			}
 
-			/*< si el email es válido, se crea el token único para recuperar la contraseña*/
-			$token_email = md5($_ENV['PROJECT_WEB_TOKEN'].$email.date("Y-m-d+H:i:s+"));
+			$ssql = "SELECT * FROM `app_estacion__usuario` WHERE `app_estacion__usuario`.`email` LIKE '$email';";
 
-			$exist_user = $this->getIdUserByEmail($email);
-
-			if ($exist_user["errno"]!=200) {
-				return ["errno" => 404 ,"error" => $exist_user["error"]];
+			$user = @$this->query($ssql)[0];
+			
+			if (is_null($user)) {
+				return ["errno" => 404, "error" => "El usuario no se encuentra registrado"];
 			}
 
-			$id_user = $exist_user["id_user"];
+			/*< si el email es válido, se crea el token único para recuperar la contraseña*/
+			$token_action = md5($_ENV['PROJECT_WEB_TOKEN'].$email.date("Y-m-d+H:i:s+"));
 
-			/*< agrega el token del usuario para su posterior validacion de su email*/
-			$ssql = "CALL `Innovplast_SetToken`('$token_email','$id_user')";
+			$ssql = "UPDATE `app_estacion__usuario` SET `app_estacion__usuario`.`token_action` = '$token_action', `app_estacion__usuario`.`recupero` = 1, `app_estacion__usuario`.`recover_date` = CURRENT_TIMESTAMP  WHERE `app_estacion__usuario`.`email` LIKE '$email';";
 
-			/*< ejecuta la consulta*/
 			$result = $this->query($ssql);
 
 			/*< instancia la clase Mailer para enviar el correo electrónico de validación de correo electrónico*/
 			$correo = new Mailer();
 
 			// crea el objeto con la vista
-			$tpl = new ACME("emails/recoveryPassword");
+			$tpl = new ACME("emails/recovery");
 
 			// carga la vista
-			$tpl->loadTPL();
+			$tpl->loadTPLFromAPI();
 
-			$vars = ["TOKEN_EMAIL" => $token_email];
+			$vars = ["TOKEN_ACTION" => $token_action, "APP_URL_BASE" => $_ENV["APP_URL_BASE"]];
 
-			/*< pasa el valor de la variable token a la vista*/
+			/*< pasa el valor de las variables a la vista*/
 			$tpl->setVarsTPL($vars);
 
-			/*< plantilla de email para recuperar cuenta*/
+			/*< plantilla de email para validar cuenta*/
 			$cuerpo_email = $tpl->returnTPL();
 
-			/*< envia el correo electrónico de vrecuperacion*/
-			$correo->send(["destinatario" => $email, "motivo" => "Recuperacion de Contraseña", "contenido" => $cuerpo_email] );
+			/*< envia el correo electrónico de validación*/
+			$correo->send(["destinatario" => $email, "motivo" => "Recuperar Contraseña", "contenido" => $cuerpo_email] );
 
 			return ["errno" => 200, "error" => "Email enviado con éxito"];
 		}
-
-		/**
-		 * 
-		 * @brief Retorna un listado limitado
-		 * @param string $request_method espera a GET
-		 * @param array $request [inicio][cantidad]
-		 * @return array lista con los datos de los usuarios 
-		 * 
-		 * */
-		function recoveryPassword($request){
-
-			$token_email = $request["TOKEN_EMAIL"];
-			$pass = md5($request["POST"]["txt_pass"]."innovplast");
-
-			$result = $this->query("UPDATE `Innovplast__usuario` INNER JOIN `Innovplast__token` ON `Innovplast__usuario`.`ID_USUARIO` = `Innovplast__token`.`ID_USUARIO` SET `Innovplast__usuario`.password = '$pass',`Innovplast__token`.token_activo = '0' WHERE `Innovplast__token`.`token_email` = '$token_email' AND `Innovplast__token`.`token_activo` = '1';");
-
-			return ["errno" => 200, "error" => "Contraseña modificada con éxito"];
-		}
-
-		/**
-		 * 
-		 * @brief Retorna un listado limitado
-		 * @param string $request_method espera a GET
-		 * @param array $request [inicio][cantidad]
-		 * @return array lista con los datos de los usuarios 
-		 * 
-		 * */
-		function getIdUserByEmail($email){
-
-			$result = @$this->query("SELECT * FROM `Innovplast__usuario` WHERE `email` LIKE '$email'")[0];
-			
-			if (!is_null($result)) {
-				return ["errno" => 200, "error" => "", "id_user" => $result["ID_USUARIO"]];
-			}
-			return ["errno" => 404, "error" => "No se ha encontrado ninguna cuenta vinculada al email proporcionado"];
-			
-		}
-
-		/**
-		 * 
-		 * @brief Retorna un listado limitado
-		 * @param string $request_method espera a GET
-		 * @param array $request [inicio][cantidad]
-		 * @return array lista con los datos de los usuarios 
-		 * 
-		 * */
-		function setNewPass($request){
-
-			$email = $this->email;
-
-			$actual_pass = md5($request["pass"]."innovplast");
-
-			$new_pass = md5($request["new_pass"]."innovplast");
-
-			$ssql = "SELECT * FROM `Innovplast__usuario` WHERE `Innovplast__usuario`.`email` LIKE '$email' AND `Innovplast__usuario`.`password` = '$actual_pass';";
-
-			$result = @$this->query($ssql)[0];
-			
-			if (!is_null($result)) {
-
-				$ssql = "UPDATE `Innovplast__usuario` SET `password` = '$new_pass' WHERE `Innovplast__usuario`.`email` LIKE '$email';";
-
-				$result = $this->query($ssql);
-
-				return ["errno" => 200, "error" => "Contraseña modificada con éxito"];
-			}
-			return ["errno" => 404, "error" => "Ha ocurrido un error al intentar modificar la contraseña, revise las credenciales"];
-			
-		}
-
-
-		/**
-		 * 
-		 * @brief Retorna un listado limitado
-		 * @param string $request_method espera a GET
-		 * @param array $request [inicio][cantidad]
-		 * @return array lista con los datos de los usuarios 
-		 * 
-		 * */
-		function getMyOpinions($request){
-
-			$request_method = $_SERVER["REQUEST_METHOD"];
-
-			/*< Es el método correcto en HTTP?*/
-			if($request_method!="GET"){
-				return ["errno" => 410, "error" => "Metodo invalido"];
-			}
-
-			$id_user = $_SESSION["innovplast"]["user"]->ID_USUARIO;
-
-			$ssql = "SELECT LEFT(`Innovplast__producto_opinion`.`date_at`, 10) as 'fecha', SUBSTRING(`Innovplast__producto_opinion`.`date_at`, 12, 5) as 'hora', `Innovplast__usuario`.`nombre`, `Innovplast__usuario`.`apellido`, `Innovplast__comentario`.`contenido`, `Innovplast__calificacion`.`valor`, `Innovplast__producto`.`nombre`, `Innovplast__producto`.`imagen`, `Innovplast__producto`.`descripcion` FROM `Innovplast__producto_opinion` INNER JOIN `Innovplast__producto` ON `Innovplast__producto_opinion`.`token_producto` = `Innovplast__producto`.`token` INNER JOIN `Innovplast__comentario` ON `Innovplast__producto_opinion`.`ID_COMENTARIO` = `Innovplast__comentario`.`ID_COMENTARIO` INNER JOIN `Innovplast__calificacion` ON `Innovplast__producto_opinion`.`ID_CALIFICACION` = `Innovplast__calificacion`.`ID_CALIFICACION` INNER JOIN `Innovplast__usuario` ON `Innovplast__producto_opinion`.`ID_USUARIO` = `Innovplast__usuario`.`ID_USUARIO` WHERE `Innovplast__producto_opinion`.`ID_USUARIO` = $id_user ORDER BY `Innovplast__producto_opinion`.`ID_CALIFICACION` DESC; ";
-
-
-			$result = $this->query($ssql);
-			
-			if (!is_null($result)) {
-
-				return ["errno" => 200, "error" => "", "res" => $result];
-			}
-			return ["errno" => 404, "error" => "El usuario no ha realizado ninguna opinion"];
-			
-		}
-
-		/**
-		 * 
-		 * @brief Retorna un listado limitado
-		 * @param string $request_method espera a GET
-		 * @param array $request [inicio][cantidad]
-		 * @return array lista con los datos de los usuarios 
-		 * 
-		 * */
-		function getTickets($request){
-
-			$request_method = $_SERVER["REQUEST_METHOD"];
-
-			/*< Es el método correcto en HTTP?*/
-			if($request_method!="GET"){
-				return ["errno" => 410, "error" => "Metodo invalido"];
-			}
-
-			/*< Solo un usuario logueado puede ver el listado */
-			if(!$_SESSION["innovplast"]['user']->is_admin){
-				return ["errno" => 411, "error" => "Acceso denegado"];
-			}
-
-			/*
-
-			if(!isset($_SESSION["morphyx"]['user_level'])){
-
-				if($_SESSION["morphyx"]['user_level']!='admin'){
-				return ["errno" => 412, "error" => "Solo el 	administrador puede utilizar el metodo"];
-				}
-			}
-
-			*/
-
-			if(isset($request["inicio"])){
-				$inicio = $request["inicio"];
-			}
-
-			if(!isset($request["cantidad"])){
-				return ["errno" => 404, "error" => "falta cantidad por GET"];
-			}
-
-			$cantidad = $request["cantidad"];
-
-			$result = $this->query("SELECT `Innovplast__usuario_ticket`.`ID_USUARIO_TICKET` as 'num_factura', `Innovplast__usuario`.`nombre` as 'nombre_cliente', `Innovplast__usuario`.`apellido` as 'apellido_cliente', `Innovplast__ticket`.`ticket` as 'url_ticket', `Innovplast__carrito`.`metodo_pago` as 'metodo_pago', `Innovplast__carrito`.`total` as 'total', LEFT(`Innovplast__usuario_ticket`.`date_at` , 10) as 'fecha', SUBSTRING(`Innovplast__usuario_ticket`.`date_at` , 12 , 5) as 'hora' FROM `Innovplast__usuario_ticket` INNER JOIN `Innovplast__ticket` ON `Innovplast__usuario_ticket`.`ID_TICKET` = `Innovplast__ticket`.`ID_TICKET` INNER JOIN `Innovplast__carrito` ON `Innovplast__ticket`.`ID_CARRITO` = `Innovplast__carrito`.`ID_CARRITO` INNER JOIN `Innovplast__usuario` ON `Innovplast__carrito`.`ID_USUARIO` = `Innovplast__usuario`.`ID_USUARIO` WHERE `Innovplast__usuario_ticket`.`ID_USUARIO` = 19 LIMIT $inicio, $cantidad");
-
-			return $result;
-		}
-
-
-
-
-
-
 
 	}
  ?>

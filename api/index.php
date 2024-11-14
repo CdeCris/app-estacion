@@ -23,7 +23,10 @@
 	include '../lib/mp-mailer/Mailer/src/Exception.php';
 
 	// incluimos la libreria que genera los pdf
-	include '../lib/fpdf/fpdf.php';
+	// include '../lib/fpdf/fpdf.php';
+
+	// incluimos la libreria del motor de plantillas
+	include '../lib/Acme/Acme.php';
 
 	// captura el nombre del request method
 	$request_method = $_SERVER["REQUEST_METHOD"];
@@ -48,7 +51,7 @@
 	}
 		
 	/*< obtiene todo lo que esta delante de /api/ */
-	$url = str_replace("/alumno/6904/Innovplast/api/","",$_SERVER["REDIRECT_URL"]);	
+	$url = str_replace("/alumno/6904/app-estacion/api/","",$_SERVER["REDIRECT_URL"]);	
 
 	/*< averigua si al final de la url hay una barra y la quita */
 	if(substr($url, -1) == "/"){

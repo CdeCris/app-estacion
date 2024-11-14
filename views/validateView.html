@@ -1,0 +1,41 @@
+@extern('header')
+
+
+
+	<header>
+	    <div class="logo">
+	       <a href="{{APP_URL_BASE}}/landing"><img src="{{APP_URL_LOGO_MAIN}}" alt=""></a>
+	    </div>
+
+	    <div class="enlaces" id="enlacesHead">
+	        <a href="{{APP_URL_BASE}}/landing" class="btn_navbar" id="inicio"><i class="fa-solid fa-house me-0 p12R"></i>Inicio</a>
+	        <a href="{{APP_URL_BASE}}/panel" class="btn_navbar" id="estaciones"><i class="p12R fa-solid fa-right-to-bracket"></i>Estaciones</a>
+	        <a href="{{APP_URL_BASE}}/login" class="btn_navbar" id="inicio_sesion"><i class="p12R fa-solid fa-right-to-bracket"></i>Iniciar Sesión</a>
+	    </div>
+
+	</header>
+	<main class="main-landing">
+
+		<div class="landing m12t letra-negra">
+			<!-- <span class="font-25 font-400">Bienvenido a App-Estación: Datos Meteorológicos en Tiempo Real</span> -->
+			<div id="box_charge">
+				<div class="loading-container">
+			        <div class="circle outer-circle"></div>
+			        <div class="circle outer-circle-parent"></div>
+			        <div class="circle inner-circle"></div>
+			        <div class="circle inner-circle-parent"></div>
+			    </div>
+			    <div class="menssage_charge">
+			    	Verificando su cuenta, aguarde un segundo...
+			    </div>
+			</div>
+			<div id="error_conteiner" class="d-none">
+				<div id="error_icon_check" class="error-icon check">&#10003;</div>
+				<div id="error_icon_cruz" class="error-icon cruz">&#10005;</div>
+				<div id="error_msg" class="error-msg"></div>
+			</div>
+		</div>
+	</main>
+    <script src="{{APP_URL_BASE}}/views/static/js/validate.js"></script>
+
+@extern('footer')

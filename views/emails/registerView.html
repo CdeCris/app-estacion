@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación de Registro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+		.container {
+		    width: 100%;
+		    max-width: 600px;
+		    margin: 0 auto;
+		    background-color: #ffffff;
+		    padding: 20px;
+		    border-radius: 8px;
+		    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+            color: black;
+		}
+        .header {
+            text-align: center;
+            padding: 10px 0;
+        }
+        .header h1 {
+            margin: 0;
+            color: #952ea9;
+        }
+        .content {
+            padding: 20px;
+        }
+        .content p {
+            line-height: 1.6;
+        }
+        .button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px 0;
+            background-color: rgba(53, 55, 65, 1);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{PROJECT_NAME}}</h1>
+        </div>
+        <div class="content">
+            <p>Hola,</p>
+            <p>Gracias por registrarte en {{PROJECT_NAME}}. Para completar tu registro, por favor confirma tu dirección de correo electrónico haciendo clic en el botón de abajo:</p>
+            <a href="{{APP_URL_BASE}}/validate?token_action={{TOKEN_EMAIL}}" class="button">Click aquí para activar tu usuario</a>
+            <p>Si no te registraste en {{PROJECT_NAME}}, ignora este correo electrónico.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 {{PROJECT_AUTHOR}}. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</body>
+</html>
