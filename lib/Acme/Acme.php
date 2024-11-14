@@ -68,16 +68,6 @@
 				"APP_URL_LOGO_HEAD" =>$_ENV["APP_URL_LOGO_HEAD"]
 			]);
 
-			if (isset($_SESSION["innovplast"]["user"])) {
-
-				$usuario = $_SESSION["innovplast"]["user"];
-
-				$this->setVarsTPL([
-					"NOMBRE_USUARIO" => $usuario->nombre,
-					"AVATAR_USUARIO" =>$usuario->avatar
-				]);
-			}
-
 			return true;
 		}
 
@@ -99,15 +89,16 @@
 			foreach ($matches[0] as $key => $extends) {
 
 				if($matches[1][$key] == "navbar"){
-					if (isset($_SESSION['innovplast'])) {
-						$matches[1][$key] = $_SESSION['innovplast']['user']->is_admin ? "navbar_admin" : "navbar_cliente";
+					if (isset($_SESSION['app-estacion'])) {
+						// $matches[1][$key] = $_SESSION['app-estacion']['user']->is_admin ? "navbar_admin" : "navbar_cliente";
+						$matches[1][$key] = "navbar_cliente";
 					}else{
 						$matches[1][$key] = "navbar_anonimo"; 
 					}
 				}
 
 				if($matches[1][$key] == "perfil"){
-					$matches[1][$key] = $_SESSION['innovplast']['user']->is_admin ? "perfil_admin" : "perfil_cliente";
+					$matches[1][$key] = $_SESSION['app-estacion']['user']->is_admin ? "perfil_admin" : "perfil_cliente";
 				}
 				/*< carga el contenido del archivo*/
 				$header = file_get_contents("views/externs/".$matches[1][$key].".html");
