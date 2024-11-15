@@ -6,6 +6,10 @@
 	// carga la vista
 	$tpl->loadTPL();
 
+	// $user = new User();
+
+	// $user->trackerDataTroll();
+
 	// array para pasar variables a la vista
 	$vars = ["PROJECT_SECTION" => "Landing"];
 

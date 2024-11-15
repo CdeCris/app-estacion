@@ -17,6 +17,11 @@ btn_login.addEventListener("click", e => {
 			/*< Redirecciona al panel */
 			window.location.href = "panel";
 		}
+		// si el logueo fue valido
+		if (data.list.errno == 210) {
+			/*< Redirecciona al panel */
+			window.location.href = "administrador";
+		}
 
 		/*< El logueo no fue valido, muestra el error */
 		msg_box.textContent = data.list.error;

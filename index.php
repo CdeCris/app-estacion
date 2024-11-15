@@ -38,11 +38,15 @@
 	//=== firewall
 
 	// Listas de acceso dependiendo del estado del usuario
-	$controlador_login = ["logout", "detalle"];
-	$controlador_anonimo = ["landing", "login", "register", "validate", "blocked", "recovery", "reset"];
+	$controlador_login = ["logout", "detalle", "administrador", "map"];
+	$controlador_anonimo = ["landing", "login", "register", "validate", "blocked", "recovery", "reset", "administrador", "map"];
 
 	// sesion iniciada
 	if(isset($_SESSION['app-estacion'])){
+		
+		if ($_SESSION['app-estacion']['user']->is_admin) {
+			$controlador_anonimo = ["landing", "login", "register", "validate", "blocked", "recovery", "reset"];
+		}
 
 		// recorre la lista de secciones no permitidas
 		foreach ($controlador_anonimo as $key => $value) {

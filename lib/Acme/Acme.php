@@ -6,6 +6,7 @@
 	 * Class Acme Motor de plantillas
 	 * 
 	 * */
+
 	class Acme{
 
 		/*< almacena la vista*/
@@ -90,16 +91,12 @@
 
 				if($matches[1][$key] == "navbar"){
 					if (isset($_SESSION['app-estacion'])) {
-						// $matches[1][$key] = $_SESSION['app-estacion']['user']->is_admin ? "navbar_admin" : "navbar_cliente";
-						$matches[1][$key] = "navbar_cliente";
+						$matches[1][$key] = $_SESSION['app-estacion']['user']->is_admin ? "navbar_admin" : "navbar_cliente";
 					}else{
 						$matches[1][$key] = "navbar_anonimo"; 
 					}
 				}
 
-				if($matches[1][$key] == "perfil"){
-					$matches[1][$key] = $_SESSION['app-estacion']['user']->is_admin ? "perfil_admin" : "perfil_cliente";
-				}
 				/*< carga el contenido del archivo*/
 				$header = file_get_contents("views/externs/".$matches[1][$key].".html");
 

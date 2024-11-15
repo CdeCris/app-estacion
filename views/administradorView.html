@@ -1,0 +1,37 @@
+@extern('header')
+    
+    @extern('navbar')
+
+    <div id="window_charge" class="d-none">
+        <div id="box_charge">
+            <div class="loading-container">
+                <div class="circle outer-circle"></div>
+                <div class="circle outer-circle-parent"></div>
+                <div class="circle inner-circle"></div>
+                <div class="circle inner-circle-parent"></div>
+            </div>
+            <div class="menssage_charge">
+                Cargando...
+            </div>
+        </div>
+    </div>
+
+    <main class="main-panel-Admin">
+        <span class="font-25 letra-negra">¡Bienvenido al Administrador!</span>
+        <div class="data-container">
+            <div class="user-container">
+                <span class="user text">Cantidad de usuarios registrados: </span>
+                <i class="fa-solid fa-user"></i><div id="user_cant"></div>
+            </div>
+            <div class="client-container">
+                <span class="client text">Cantidad de clientes: </span>
+                <i class="fa-solid fa-eye"></i><div id="client_cant"></div>
+            </div>
+            <div id="error_msg"></div>
+        </div>
+
+        <div id="listado__estaciones" class="panel_admin"></div>
+    </main>
+    <script src="{{APP_URL_BASE}}/views/static/js/administrador.js"></script>
+
+@extern('footer')

@@ -65,9 +65,8 @@ form_reset.addEventListener('submit', function(event) {
 
     	box_charge.classList.add("d-none")
 
-        error_conteiner.classList.remove("d-none")
-
         if(data.list.errno==200){
+            error_conteiner.classList.remove("d-none")
             error_msg.textContent = data.list.error;
             error_icon_cruz.classList.add("d-none")
             setTimeout(() => {
@@ -75,8 +74,9 @@ form_reset.addEventListener('submit', function(event) {
             }, 1500);
 
         }else{
-            error_msg.textContent = data.list.error;
-            error_icon_check.classList.add("d-none")
+            form_error_msg.textContent = data.list.error;
+            form_reset.classList.remove("d-none")
+
         } 
     })
 

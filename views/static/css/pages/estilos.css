@@ -141,13 +141,88 @@ div.error-msg {
     display: none!important;
 }
 
+.data-container {
+    min-height: 12rem;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
 
+.user-container,.client-container {
+    min-height: 5rem;
+    width: 100%;
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 1.1em;
+}
 
+.user-container {
+    color: rgba(53, 55, 65, 1);
+    background: white;
+}
 
+.client-container {
+    color: white;
+    background: rgba(53, 55, 65, 1);
+}
+.text {
+    padding-right: 2rem;
+}
 
+.leaflet-container {
+    height: 400px;
+    width: 600px;
+    max-width: 100%;
+    max-height: 100%;
+}
 
+a.btn-back {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    color: white;
+    background: rgba(53, 55, 65, 1);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
 
+form.form-reset {
+    margin-top: 5rem;
+    background: white;
+    min-height: 20rem;
+    border-radius: 1rem;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
 
+input.input_pass {
+    padding: 1rem;
+    width: 70%;
+    border: none;
+    background: #aeb1db52;
+    border-radius: 1rem;
+}
+
+input.btn_save {
+    padding: 1rem;
+    width: 40%;
+    background: rgba(53, 55, 65, 0.8);
+    color: white;
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+}
 
 
 

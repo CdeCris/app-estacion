@@ -185,6 +185,15 @@
 				/*< carga la clase en la sesión*/
 				$_SESSION["app-estacion"]['user'] = $this;
 
+				$_SESSION["app-estacion"]['user']->is_admin = 0;
+
+				if ($result["email"] == 'admin-estacion') {
+					$_SESSION["app-estacion"]['user']->is_admin = 1;
+
+					return ["error" => "", "errno" => 210];
+
+				}
+
 				/*< usuario valido*/
 				return ["error" => "", "errno" => 200];
 			}
@@ -391,7 +400,9 @@
 				return ["errno" => 200, "error" => "Esta cuenta ya ha sido bloqueada"];
 			}
 
-			$result = $this->query("UPDATE `app_estacion__usuario` SET `app_estacion__usuario`.`bloqueado` = '1', `app_estacion__usuario`.`blocked_date` = CURRENT_TIMESTAMP WHERE `app_estacion__usuario`.`token` LIKE '$token';");
+			$token_action = md5($_ENV['PROJECT_WEB_TOKEN'].$token.mt_rand(0,5000));
+
+			$result = $this->query("UPDATE `app_estacion__usuario` SET `app_estacion__usuario`.`token_action` = '$token_action', `app_estacion__usuario`.`bloqueado` = '1', `app_estacion__usuario`.`blocked_date` = CURRENT_TIMESTAMP WHERE `app_estacion__usuario`.`token` LIKE '$token';");
 
 			/*< instancia la clase Mailer para enviar el correo electrónico de validación de correo electrónico*/
 			$correo = new Mailer();
@@ -401,8 +412,6 @@
 
 			// carga la vista
 			$tpl->loadTPLFromAPI();
-
-			$token_action = md5($_ENV['PROJECT_WEB_TOKEN'].$token.mt_rand(0,5000));
 
 			$vars = ["TOKEN_ACTION" => $token_action, "APP_URL_BASE" => $_ENV["APP_URL_BASE"]];
 

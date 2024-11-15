@@ -1,24 +1,18 @@
 <?php 
-
-	include_once 'models/Tracker.php';
-
+	
 	// crea el objeto con la vista
-	$tpl = new Acme("panel");
+	$tpl = new Acme("map");
 
 	// carga la vista
 	$tpl->loadTPL();
 
-	$tracker = new Tracker();
-
-	$tracker->trackerData();
-
 	//array con las variables a cargar en la vista
-	$vars = ["PROJECT_SECTION" => "Panel"];
+	$vars = ["PROJECT_SECTION" => "Mapa"];
 
 	//carga el array con las vaiables en la vista
 	$tpl->setVarsTPL($vars);
 
-	// imprime en la vista en la página
+	// imprime en la página la vista
 	$tpl->printTPL();
 
  ?>
